@@ -9,11 +9,13 @@ using namespace std;
 class Movies;
 class ActorNode{
  public:
-  vector<Movies*> movies;
   string name;
+  int distance;
+  ActorNode* prev;
+  vector<Movies*> movies;
+
   ActorNode(string n);
   void addMovie(Movies* m);
-
 };
 
 #endif
