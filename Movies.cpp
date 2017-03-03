@@ -2,8 +2,9 @@
 
 using namespace std;
 
-Movies::Movies(string n){
+Movies::Movies(string n, int year){
   name = n;
+  year = year;
 }
 
 void Movies::addActor(ActorNode* a){

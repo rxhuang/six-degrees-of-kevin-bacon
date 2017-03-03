@@ -7,11 +7,12 @@
 using namespace std;
 
 class ActorNode;
-class Movies{    
+class Movies{
  public:
   string name;
+  int year;
   vector<ActorNode*> starring;
-  Movies(string n);
+  Movies(string n, int);
   void addActor(ActorNode* a);
 };
 

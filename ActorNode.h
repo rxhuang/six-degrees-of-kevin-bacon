@@ -11,7 +11,6 @@ class ActorNode{
  public:
   vector<Movies*> movies;
   string name;
-  int 
   ActorNode(string n);
   void addMovie(Movies* m);
 
