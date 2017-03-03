@@ -9,7 +9,9 @@
 
 #ifndef ACTORGRAPH_H
 #define ACTORGRAPH_H
-
+#include "ActorNode.h"
+#include <unordered_map>
+#include <string>
 #include <iostream>
 
 // Maybe include some data structures here
@@ -20,7 +22,8 @@ class ActorGraph {
 protected:
   
     // Maybe add class data structure(s) here
-
+    unordered_map<string, ActorNode*> actors;
+    unordered_map<string, Moives*> movies;
 public:
     ActorGraph(void);
 
