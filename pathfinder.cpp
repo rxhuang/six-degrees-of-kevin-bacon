@@ -41,7 +41,7 @@ int main(int argc, char*argv[]) {
     return -1;
   }*/
   ifstream infile1;
-  infile1.open("movie_casts_1991.tsv", ios::in);
+  infile1.open(argv[1], ios::in);
   //ifstream infile2(argv[3]);
   ActorGraph graph;
   graph.loadFromFile(argv[1], false);
