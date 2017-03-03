@@ -4,12 +4,13 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <fstream>
 #define MAX 2147483647
 
 /*param: two actor names
   return: shortest path
 */
-ActorNode* BFS(ActorNode* actor1, ActorNode* actor2) {
+/*ActorNode* BFS(ActorNode* actor1, ActorNode* actor2) {
   ActorNode* curr;
   ActorNode* currA;
   Movies* currM;
@@ -27,14 +28,26 @@ ActorNode* BFS(ActorNode* actor1, ActorNode* actor2) {
 	  currA.prev = curr;
 	  queue.push(currA);
 	}
-	
+
       }
     }
   }
 
-}
+}*/
 
-int main() {
+int main(int argc, char*argv[]) {
+  /*if(argc != 5){
+    cout << "invalid # of arguments" << endl;
+    return -1;
+  }*/
+  ifstream infile1;
+  infile1.open("movie_casts_1991.tsv", ios::in);
+  //ifstream infile2(argv[3]);
   ActorGraph graph;
-  
+  graph.loadFromFile(argv[1], false);
+  for(auto x:graph.actors){
+    cout << x.first << endl;
+  }
+  return 0;
+
 }
