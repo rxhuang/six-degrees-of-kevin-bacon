@@ -93,6 +93,7 @@ int main(int argc, char*argv[]) {
   ifstream infile2;
   infile2.open(argv[3], ios::in);
   ActorGraph graph;
+  ofstream outfile;
   if(strcmp(argv[2], "u"))
     weighted = false;
   else
@@ -100,6 +101,9 @@ int main(int argc, char*argv[]) {
   graph.loadFromFile(argv[1], weighted);
   loadpair(argv[3], actorsPair);
   ActorNode * actor1;
+  outfile.open(argv[4], ios::binary);
+  //write the header
+  outfile << "(actor)--[movie#@year]-->(actor)--..." << endl;
   for(int i = 0; i < actorsPair.size(); i++){
     vector<ActorNode*> vecA;
     actor1 = graph.actors.at(actorsPair[i].first);
@@ -111,13 +115,16 @@ int main(int argc, char*argv[]) {
       vecA.insert(vecA.begin(),actor2);
       actor2 = actor2->prev;
     }
-    cout<< "("<< vecA[0]->name << ")";
+    outfile<< "("<< vecA[0]->name << ")";
     for(int i=1; i<vecA.size(); i++){
-      cout <<"--"<< "["<<vecA[i]->movie << "#@" << (graph.movies.at(vecA[i]->movie))->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";
+      outfile <<"--"<< "["<<vecA[i]->movie << "#@" << (graph.movies.at(vecA[i]->movie))->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";
     }
     graph.clear();
-    cout << endl;
+    outfile << endl;
   }
+  infile1.close();
+  infile2.close();
+  outfile.close();
   return 0;
 
 }
