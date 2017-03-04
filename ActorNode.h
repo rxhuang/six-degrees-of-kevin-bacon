@@ -10,7 +10,7 @@ class Movies;
 class ActorNode{
  public:
   string name;
-  string moive;
+  string movie;
   int distance;
   ActorNode* prev;
   vector<Movies*> movies;
