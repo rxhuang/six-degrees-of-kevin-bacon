@@ -60,30 +60,36 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
         // insert actors and movies into respective map
         if(actors.find(actor_name) == actors.end() && movies.find(movie_title) == movies.end()){
           // no actor or movie exists, add new actor and movie
-          ActorNode * a = new ActorNode(actor_name);
-          Movies * m = new Movies(movie_title,movie_year);
+          ActorNode* a = new ActorNode(actor_name);
+          Movies* m = new Movies(movie_title,movie_year);
           a->addMovie(m);
           actors.emplace(actor_name, a);
           m->addActor(a);
           movies.emplace(movie_title, m);
         }
-        else if((actors.find(actor_name))->first == actor_name && (movies.find(movie_title))->first == movie_title){
+        else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) != movies.end()){
+
           //both actor and movie exists, add respective pointers to them
           (actors.find(actor_name))->second->addMovie((movies.find(movie_title))->second);
           (movies.find(movie_title))->second->addActor((actors.find(actor_name))->second);
 
         }
-        else if((actors.find(actor_name))->first == actor_name && movies.find(movie_title) == movies.end()){
+        else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) == movies.end()){
           //actors exists, create new movie and add actor's pointer
           Movies * m = new Movies(movie_title,movie_year);
+
           m->addActor((actors.find(actor_name))->second);
+
           movies.emplace(movie_title, m);
+
           //add new movie pointer to actor
           (actors.find(actor_name))->second->addMovie(m);
 
+
         }
-        else if(actors.find(actor_name) == actors.end() && (movies.find(movie_title))->first == movie_title){
+        else if(actors.find(actor_name) == actors.end() && movies.find(movie_title) != movies.end()){
           // actor does not exist, create new actor and add respective movie pointer to it
+
           ActorNode * a = new ActorNode(actor_name);
           a->addMovie((movies.find(movie_title))->second);
           actors.emplace(actor_name, a);
