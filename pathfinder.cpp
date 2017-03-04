@@ -8,6 +8,7 @@
 #include <utility>
 #include <sstream>
 #define MAX 2147483647
+#include <string.h>
 
 /*param: two actor names
   return: shortest path
@@ -76,7 +77,7 @@ void loadpair(const char* in_filename, vector<pair<string, string>> &input){
 
       string actor1(record[0]);
       string actor2(record[1]);
-      input.insert(input.begin(), make_pair(actor1, actor2));
+      input.insert(input.end(), make_pair(actor1, actor2));
     }
 }
 int main(int argc, char*argv[]) {
@@ -100,10 +101,10 @@ int main(int argc, char*argv[]) {
   vector<ActorNode*> vecA;
   ActorNode * actor1;
   for(int i = 0; i < actorsPair.size(); i++){
-    actor1 = graph.actors[actorsPair[i].first];
+    actor1 = graph.actors.at(actorsPair[i].first);
     BFS(actor1);
     ActorNode* actor2;
-    actor2 = graph.actors[actorsPair[i].second];
+    actor2 = graph.actors.at(actorsPair[i].second);
     for(int i=0; i<actor2->distance; i++){
       vecA.insert(vecA.begin(),actor2);
       actor2 = actor2->prev;
