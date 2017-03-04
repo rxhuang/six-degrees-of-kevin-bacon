@@ -33,6 +33,7 @@ void BFS(ActorNode* actor1) {
 	  currA->distance = curr->distance+1; //set distance to previous distance +1
 	  currA->prev = curr;// set prev
 	  currA->movie = currM->name;
+    //currA->year = currM->year;
 	  queue.push(currA);//push it to queue
 	}
       }
@@ -110,9 +111,9 @@ int main(int argc, char*argv[]) {
       vecA.insert(vecA.begin(),actor2);
       actor2 = actor2->prev;
     }
-    cout<< vecA[0]->name;
+    cout<< "("<< vecA[0]->name << ")";
     for(int i=1; i<vecA.size(); i++){
-      cout <<"--"<<vecA[i]->movie<<"-->"<<vecA[i]->name;
+      cout <<"--"<< "["<<vecA[i]->movie << "#@" << (graph.movies.at(vecA[i]->movie))->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";
     }
     graph.clear();
     cout << endl;

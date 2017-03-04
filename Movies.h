@@ -12,7 +12,7 @@ class Movies{
   string name;
   int year;
   vector<ActorNode*> starring;
-  Movies(string n, int);
+  Movies(string n, int y);
   void addActor(ActorNode* a);
 };
 

@@ -12,6 +12,7 @@ class ActorNode{
   string name;
   string movie;
   int distance;
+  int year;
   ActorNode* prev;
   vector<Movies*> movies;
 
