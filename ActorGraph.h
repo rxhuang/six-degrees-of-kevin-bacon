@@ -40,6 +40,7 @@ public:
      * return true if file was loaded sucessfully, false otherwise
      */
      bool loadFromFile(const char* in_filename, bool use_weighted_edges);
+     void clear();
      unordered_map<string, ActorNode*> actors;
      unordered_map<string, Movies*> movies;
 };

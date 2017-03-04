@@ -98,14 +98,15 @@ int main(int argc, char*argv[]) {
     weighted = true;
   graph.loadFromFile(argv[1], weighted);
   loadpair(argv[3], actorsPair);
-  vector<ActorNode*> vecA;
   ActorNode * actor1;
   for(int i = 0; i < actorsPair.size(); i++){
+    vector<ActorNode*> vecA;
     actor1 = graph.actors.at(actorsPair[i].first);
     BFS(actor1);
     ActorNode* actor2;
     actor2 = graph.actors.at(actorsPair[i].second);
-    for(int i=0; i<actor2->distance; i++){
+    int distance = actor2->distance+1;
+    for(int i=0; i<distance; i++){
       vecA.insert(vecA.begin(),actor2);
       actor2 = actor2->prev;
     }
@@ -113,6 +114,8 @@ int main(int argc, char*argv[]) {
     for(int i=1; i<vecA.size(); i++){
       cout <<"--"<<vecA[i]->movie<<"-->"<<vecA[i]->name;
     }
+    graph.clear();
+    cout << endl;
   }
   return 0;
 

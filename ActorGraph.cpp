@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include "ActorGraph.h"
-
+#define MAX 2147483647
 using namespace std;
 
 ActorGraph::ActorGraph(void) {}
@@ -107,4 +107,11 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     infile.close();
 
     return true;
+}
+
+void ActorGraph::clear(){
+  for(auto it = actors.begin(); it != actors.end(); ++it){
+    it->second->distance = MAX;
+    it->second->prev = NULL;
+  }
 }
