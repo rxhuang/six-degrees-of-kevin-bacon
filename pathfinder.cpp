@@ -109,9 +109,9 @@ int main(int argc, char*argv[]) {
       vecA.insert(vecA.begin(),actor2);
       actor2 = actor2->prev;
     }
-    cout<< vecA[0]->name << endl;
+    cout<< vecA[0]->name;
     for(int i=1; i<vecA.size(); i++){
-      cout <<"--"<<vecA[i]->movie<<"-->"<<vecA[i]->name<< endl;
+      cout <<"--"<<vecA[i]->movie<<"-->"<<vecA[i]->name;
     }
   }
   return 0;
