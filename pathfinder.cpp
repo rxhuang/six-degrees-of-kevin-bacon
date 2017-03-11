@@ -33,13 +33,42 @@ void BFS(ActorNode* actor1) {
 	  currA->distance = curr->distance+1; //set distance to previous distance +1
 	  currA->prev = curr;// set prev
 	  currA->movie = currM->name;
-    //currA->year = currM->year;
+	  //currA->year = currM->year;
 	  queue.push(currA);//push it to queue
 	}
       }
     }
   }
 }
+
+void Dijk(ActorNode* actor1) {
+  ActorNode* curr;
+  ActorNode* currA;
+  Movies* currM;
+  priority_queue<ActorNode*,vector<ActorNode*>,ActorNodePtrComp> queue;
+  queue.push(actor1); //push origin actor into queue
+  actor1->distance=0; //set distance to 0
+  while(!queue.empty()){
+    curr = queue.top();
+    queue.pop(); //pop element
+    //for all movies the actor took part
+    for(int i=0; i<curr->movies.size(); i++){
+      currM = curr->movies[i];// set pointer to one of his movies
+      //for all actors in the movie
+      for(int j=0; j<currM->starring.size(); j++){
+	currA = currM->starring[j]; //set pointer to one of its actor
+	if(currA->distance==MAX){ //if actor is not already searched
+	  currA->distance = curr->distance+1+(2015-currM->year); //set distance to previous distance +1
+	  currA->prev = curr;// set prev
+	  currA->movie = currM->name;
+	  //currA->year = currM->year;
+	  queue.push(currA);//push it to queue
+	}
+      }
+    }
+  }
+}
+
 void loadpair(const char* in_filename, vector<pair<string, string>> &input){
   // Initialize the file stream
   ifstream infile(in_filename);
@@ -107,7 +136,10 @@ int main(int argc, char*argv[]) {
   for(int i = 0; i < actorsPair.size(); i++){
     vector<ActorNode*> vecA;
     actor1 = graph.actors.at(actorsPair[i].first);
-    BFS(actor1);
+    if(weighted =true)
+      BFS(actor1);
+    else
+      Dijk(actor1);
     ActorNode* actor2;
     actor2 = graph.actors.at(actorsPair[i].second);
     int distance = actor2->distance+1;

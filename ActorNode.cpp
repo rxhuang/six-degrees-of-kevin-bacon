@@ -11,3 +11,7 @@ ActorNode::ActorNode(string n){
 void ActorNode::addMovie(Movies* m){
   movies.push_back(m);
 }
+
+bool ActorNode::operator<(ActorNode const &other){
+  return this->year>=other.year;
+}
