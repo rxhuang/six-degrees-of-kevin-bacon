@@ -40,7 +40,10 @@ public:
      * return true if file was loaded sucessfully, false otherwise
      */
      bool loadFromFile(const char* in_filename, bool use_weighted_edges);
+     bool loadFromFile(const char* in_filename);
+     void buildGraph(const char* in_filename, int year);
      void clear();
+     int curr_movie_year;
      unordered_map<string, ActorNode*> actors;
      unordered_map<string, Movies*> movies;
 };
