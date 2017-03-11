@@ -6,6 +6,7 @@ ActorNode::ActorNode(string n){
   name = n;
   distance = MAX;
   prev = NULL;
+  year = 0;
 }
 
 void ActorNode::addMovie(Movies* m){

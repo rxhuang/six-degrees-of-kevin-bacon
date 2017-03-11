@@ -33,7 +33,7 @@ void BFS(ActorNode* actor1) {
 	  currA->distance = curr->distance+1; //set distance to previous distance +1
 	  currA->prev = curr;// set prev
 	  currA->movie = currM->name;
-	  //currA->year = currM->year;
+	  currA->year = currM->year;
 	  queue.push(currA);//push it to queue
 	}
       }
@@ -124,9 +124,9 @@ int main(int argc, char*argv[]) {
   ActorGraph graph;
   ofstream outfile;
   if(strcmp(argv[2], "u"))
-    weighted = false;
-  else
     weighted = true;
+  else
+    weighted = false;
   graph.loadFromFile(argv[1], weighted);
   loadpair(argv[3], actorsPair);
   ActorNode * actor1;
@@ -136,7 +136,7 @@ int main(int argc, char*argv[]) {
   for(int i = 0; i < actorsPair.size(); i++){
     vector<ActorNode*> vecA;
     actor1 = graph.actors.at(actorsPair[i].first);
-    if(weighted =true)
+    if(!weighted)
       BFS(actor1);
     else
       Dijk(actor1);
@@ -149,7 +149,8 @@ int main(int argc, char*argv[]) {
     }
     outfile<< "("<< vecA[0]->name << ")";
     for(int i=1; i<vecA.size(); i++){
-      outfile <<"--"<< "["<<vecA[i]->movie << "#@" << (graph.movies.at(vecA[i]->movie))->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";
+      /*outfile <<"--"<< "["<<vecA[i]->movie << "#@" << (graph.movies.at(vecA[i]->movie))->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";*/
+        outfile <<"--"<< "["<<vecA[i]->movie << "#@" << vecA[i]->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";
     }
     graph.clear();
     outfile << endl;
