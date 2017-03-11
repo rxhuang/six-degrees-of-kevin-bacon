@@ -109,9 +109,14 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     return true;
 }
 
+
+
+
+
 void ActorGraph::clear(){
   for(auto it = actors.begin(); it != actors.end(); ++it){
     it->second->distance = MAX;
     it->second->prev = NULL;
+    it->second->done = false;
   }
 }

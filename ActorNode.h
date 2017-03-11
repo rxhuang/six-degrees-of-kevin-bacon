@@ -9,6 +9,7 @@ using namespace std;
 class Movies;
 class ActorNode{
  public:
+  bool done;
   string name;
   string movie;
   int distance;

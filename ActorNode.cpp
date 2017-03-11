@@ -7,6 +7,7 @@ ActorNode::ActorNode(string n){
   distance = MAX;
   prev = NULL;
   year = 0;
+  done = false;
 }
 
 void ActorNode::addMovie(Movies* m){
@@ -14,5 +15,5 @@ void ActorNode::addMovie(Movies* m){
 }
 
 bool ActorNode::operator<(ActorNode const &other){
-  return this->year>=other.year;
+  return this->distance>=other.distance;
 }

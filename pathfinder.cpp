@@ -45,23 +45,27 @@ void Dijk(ActorNode* actor1) {
   ActorNode* curr;
   ActorNode* currA;
   Movies* currM;
-  priority_queue<ActorNode*,vector<ActorNode*>,ActorNodePtrComp> queue;
+  priority_queue<ActorNode*, vector<ActorNode*>,ActorNodePtrComp> queue;
+  int distance;
   queue.push(actor1); //push origin actor into queue
   actor1->distance=0; //set distance to 0
   while(!queue.empty()){
     curr = queue.top();
     queue.pop(); //pop element
+    if(curr->done=false)
+      curr->done=true;
     //for all movies the actor took part
     for(int i=0; i<curr->movies.size(); i++){
       currM = curr->movies[i];// set pointer to one of his movies
       //for all actors in the movie
       for(int j=0; j<currM->starring.size(); j++){
 	currA = currM->starring[j]; //set pointer to one of its actor
-	if(currA->distance==MAX){ //if actor is not already searched
-	  currA->distance = curr->distance+1+(2015-currM->year); //set distance to previous distance +1
+	distance = curr->distance+1+(2015-currM->year);
+	if(distance<currA->distance){ //if actor is not already searched
+	  currA->distance = distance; //set distance to previous distance +1
 	  currA->prev = curr;// set prev
 	  currA->movie = currM->name;
-	  //currA->year = currM->year;
+	  currA->year = currM->year;
 	  queue.push(currA);//push it to queue
 	}
       }
@@ -134,6 +138,7 @@ int main(int argc, char*argv[]) {
   //write the header
   outfile << "(actor)--[movie#@year]-->(actor)--..." << endl;
   for(int i = 0; i < actorsPair.size(); i++){
+    graph.clear();
     vector<ActorNode*> vecA;
     actor1 = graph.actors.at(actorsPair[i].first);
     if(!weighted)
@@ -142,11 +147,11 @@ int main(int argc, char*argv[]) {
       Dijk(actor1);
     ActorNode* actor2;
     actor2 = graph.actors.at(actorsPair[i].second);
-    int distance = actor2->distance+1;
-    for(int i=0; i<distance; i++){
+    while(actor2->prev){
       vecA.insert(vecA.begin(),actor2);
       actor2 = actor2->prev;
     }
+    vecA.insert(vecA.begin(),actor1);
     outfile<< "("<< vecA[0]->name << ")";
     for(int i=1; i<vecA.size(); i++){
       /*outfile <<"--"<< "["<<vecA[i]->movie << "#@" << (graph.movies.at(vecA[i]->movie))->year<< "]" <<"-->" << "("<<vecA[i]->name << ")";*/
