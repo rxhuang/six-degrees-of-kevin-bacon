@@ -1,8 +1,11 @@
 #ifndef UNIONFIND_H
 #define UNIONFIND_H
 #include <unordered_map>
+#include <fstream>
+#include <utility>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <utility>
 using namespace std;
@@ -11,6 +14,7 @@ class UnionFind{
  public:
 
   unordered_map<string, pair<string, int>> actorSet;
+  unordered_multimap<string, string> ufHash;
 
   UnionFind(){}
   ~UnionFind(){}
@@ -41,6 +45,66 @@ class UnionFind{
       actorSet[n2].second = actorSet[n1].second + actorSet[n2].second;
     }
   }
+
+  void buildUnionFind(const char* in_filename, int year){
+    // Initialize the file stream
+    ifstream infile(in_filename);
+
+    bool have_header = false;
+
+    // keep reading lines until the end of file is reached
+    while (infile) {
+        string s;
+
+        // get the next line
+        if (!getline( infile, s )) break;
+
+        if (!have_header) {
+            // skip the header
+            have_header = true;
+            continue;
+        }
+
+        istringstream ss( s );
+        vector <string> record;
+
+        while (ss) {
+            string next;
+
+            // get the next string before hitting a tab character and put it in 'next'
+            if (!getline( ss, next, '\t' )) break;
+
+            record.push_back( next );
+        }
+
+        if (record.size() != 3) {
+            // we should have exactly 3 columns
+            continue;
+        }
+
+        string actor_name(record[0]);
+        string movie_title(record[1]);
+        int movie_year = stoi(record[2]);
+        // insert actors and movies into respective map
+        if(movie_year == year){
+          ufHash.emplace(movie_title, actor_name);
+        if(actorSet.find(actor_name) == actorSet.end())
+          actorSet.emplace(actor_name, make_pair(actor_name, 1));
+          auto range = ufHash.equal_range(movie_title);
+          for(auto it = range.first; it != range.second; ++it ){
+            if(it->second != actor_name)
+  	         unionJoin(it->second, actor_name);
+          }
+      }
+    }
+
+    if (!infile.eof()) {
+        cerr << "Failed to read " << in_filename << "!\n";
+    }
+    infile.close();
+
+  }
+
 
 };
 #endif

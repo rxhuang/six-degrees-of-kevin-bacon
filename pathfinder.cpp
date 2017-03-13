@@ -143,7 +143,7 @@ int main(int argc, char*argv[]) {
   outfile.close();
   // print out the duration it takes to run this program
   duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
-  cout<<"The " << name << " takes "<< duration <<'\n';
+  cout<<"The " << name << " takes "<< duration << " seconds" <<'\n';
   return 0;
 
 }

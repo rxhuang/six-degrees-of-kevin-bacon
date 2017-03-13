@@ -7,6 +7,7 @@
  */
 #include "ActorNode.h"
 #include "ActorGraph.h"
+#include "UnionFind.hpp"
 #include "Movies.h"
 #include <iostream>
 #include <queue>
@@ -16,6 +17,8 @@
 #include <sstream>
 #define MAX 2147483647
 #include <string.h>
+#include <cstdio>
+#include <ctime>
 
 /*
  * Load the graph from a tab-delimited file of actor->movie relationships. Then
@@ -80,11 +83,15 @@ int main(int argc, char*argv[]) {
     return -1;
   }
   //Initialize graph and output stream
+  clock_t start;
+  double duration;
+  start = clock();
   string name;
   vector<pair<string, string>> actorsPair;
   vector<pair<string, string>> temp;
   ActorGraph graph;
   ofstream outfile;
+  UnionFind uf;
   if(argc == 4)//by default we use unionfind method
     name = "uf";
   //otherwise, check to see which method to use
@@ -98,7 +105,7 @@ int main(int argc, char*argv[]) {
   ifstream infile2;
   infile2.open(argv[2], ios::in);
   //load graph once and find the oldest movie year
-  graph.loadFromFile(argv[1]);
+  graph.getOldestYear(argv[1]);
   loadpair(argv[2], actorsPair);
   temp = actorsPair;
   int size = temp.size();
@@ -116,7 +123,7 @@ int main(int argc, char*argv[]) {
   if(name == "bfs"){
     for(int i = graph.curr_movie_year; i < 2016; i++){
       //adding nodes to graphs via ActorGraph object
-      graph.buildGraph(argv[1], i);
+      graph.buildGraphByYear(argv[1], i);
       for(int j = 0; j < size; j++){
 	//chech if both actors are in the graph or not
 	if(graph.actors.find(temp[j].first) != graph.actors.end() && graph.actors.find(temp[j].second) != graph.actors.end() ){
@@ -129,10 +136,10 @@ int main(int argc, char*argv[]) {
 	  // while actor has prev node go to prev, then compre if actor1 = actor2
 	  while(actor2->prev)
 	    actor2 = actor2->prev;
-	  if(actor2 == actor1 && movie_year[j] == 0){
+	  if(actor2 == actor1){
 	    movie_year[j] = i;
 	    //set temp[j] to null so next time search wont replace year again
-	    //temp[j] = make_pair(NULL, NULL);
+	    temp[j] = make_pair(NULL, NULL);
 	  }
 	}
       }
@@ -144,10 +151,10 @@ int main(int argc, char*argv[]) {
   else{
     for(int i = graph.curr_movie_year; i < 2016; i++){
       //adding nodes to graphs via ActorGraph object
-      graph.buildUnionFind(argv[1], i);
+      uf.buildUnionFind(argv[1], i);
       for(int j = 0; j < size; j++){
 	//chech if both actors are in the graph or not
-	if(graph.uf.find(temp[j].first) == graph.uf.find(temp[j].second)){
+	if(uf.find(temp[j].first) == uf.find(temp[j].second)){
 	  if(movie_year[j] == 0)
 	    movie_year[j] = i;
         }
@@ -168,5 +175,7 @@ int main(int argc, char*argv[]) {
   infile1.close();
   infile2.close();
   outfile.close();
-  return 0;  
+  duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+  cout<<"The " << name << " takes "<< duration << " seconds" <<'\n';
+  return 0;
 }
