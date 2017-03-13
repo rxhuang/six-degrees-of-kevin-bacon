@@ -19,6 +19,7 @@ class Movies{
   string name;
   int year;
   vector<ActorNode*> starring;
+  vector<string> actorNames;
   Movies(string n, int y);
   void addActor(ActorNode* a);
 };

@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <queue>
+#include "UnionFind.hpp"
 
 
 // Maybe include some data structures here
@@ -35,6 +36,7 @@ public:
      */
      bool loadFromFile(const char* in_filename, bool use_weighted_edges);
      bool loadFromFile(const char* in_filename);
+     void buildUnionFind(const char* in_filename, int year);
      void buildGraph(const char* in_filename, int year);
      void clear();
      void BFS(ActorNode*);
@@ -42,6 +44,8 @@ public:
      int curr_movie_year;
      unordered_map<string, ActorNode*> actors;
      unordered_map<string, Movies*> movies;
+     UnionFind uf;
+     unordered_multimap<string, string> ufHash;
 };
 
 

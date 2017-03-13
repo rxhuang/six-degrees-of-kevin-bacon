@@ -74,15 +74,22 @@ void loadpair(const char* in_filename, vector<pair<string, string>> &input){
 }
 //main func
 int main(int argc, char*argv[]) {
-  if(argc != 4){
+  if(argc != 4 && argc != 5){
     cout << "invalid # of arguments" << endl;
     return -1;
   }
   //Initialize graph and output stream
+  string name;
   vector<pair<string, string>> actorsPair;
   vector<pair<string, string>> temp;
   ActorGraph graph;
   ofstream outfile;
+  if(argc == 4)
+    name = "uf";
+  else if(strcmp(argv[5], "bfs"))
+    name = "uf";
+  else
+    name = "bfs";
   //Initialize two input file streams
   ifstream infile1;
   infile1.open(argv[1], ios::in);
@@ -104,6 +111,7 @@ int main(int argc, char*argv[]) {
   infile1.clear();
   infile1.seekg(0, ios::beg);
   //for each movie, from the oldest year to 2015 buildgraph and then do BFS to find whether two actors are connected or not
+  if(name == "bfs"){
   for(int i = graph.curr_movie_year; i < 2016; i++){
     //adding nodes to graphs via ActorGraph object
     graph.buildGraph(argv[1], i);
@@ -129,8 +137,30 @@ int main(int argc, char*argv[]) {
     //set to beginning of the files
     infile1.clear();
     infile1.seekg(0, ios::beg);
+  }
+}
+else{
+  for(int i = graph.curr_movie_year; i < 2016; i++){
+    //adding nodes to graphs via ActorGraph object
+    graph.buildUnionFind(argv[1], i);
+    for(int j = 0; j < size; j++){
+      //chech if both actors are in the graph or not
+      if(graph.uf.find(temp[j].first) == graph.uf.find(temp[j].second)){
+          movie_year[j] = i;
+          //set temp[j] to null so next time search wont replace year again
+          temp[j] = make_pair(NULL, NULL);
+        }
+      }
+      //set to beginning of the files
+      infile1.clear();
+      infile1.seekg(0, ios::beg);
+
+  }
 
 }
+
+
+
   //write the header and additional informations
   outfile << "Actor1\tActor2\tYear" << endl;
   for(int i = 0; i < actorsPair.size(); i++){
