@@ -14,9 +14,9 @@ else
     LDFLAGS += -g
 endif
 
-all: pathfinder
+all: pathfinder actorconnections
 
-
+actorconnections: ActorGraph.o Movies.o ActorNode.o
 
 # include what ever source code *.h files pathfinder relies on (these are merely the ones that were used in the solution)
 

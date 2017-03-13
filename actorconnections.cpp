@@ -72,6 +72,7 @@ void loadpair(const char* in_filename, vector<pair<string, string>> &input){
     }
     infile.close();
 }
+
 //main func
 int main(int argc, char*argv[]) {
   if(argc != 4 && argc != 5){
@@ -84,8 +85,9 @@ int main(int argc, char*argv[]) {
   vector<pair<string, string>> temp;
   ActorGraph graph;
   ofstream outfile;
-  if(argc == 4)
+  if(argc == 4)//by default we use unionfind method
     name = "uf";
+  //otherwise, check to see which method to use
   else if(strcmp(argv[4], "bfs"))
     name = "uf";
   else
@@ -112,66 +114,61 @@ int main(int argc, char*argv[]) {
   infile1.seekg(0, ios::beg);
   //for each movie, from the oldest year to 2015 buildgraph and then do BFS to find whether two actors are connected or not
   if(name == "bfs"){
-  for(int i = graph.curr_movie_year; i < 2016; i++){
-    //adding nodes to graphs via ActorGraph object
-    graph.buildGraph(argv[1], i);
-    for(int j = 0; j < size; j++){
-      //chech if both actors are in the graph or not
-      if(graph.actors.find(temp[j].first) != graph.actors.end() && graph.actors.find(temp[j].second) != graph.actors.end() ){
-        // set both actor to respectively nodes
-        actor1 = graph.actors.at(temp[j].first);
-        actor2 = graph.actors.at(temp[j].second);
-        //clear graph then BFS
-        graph.clear();
-        graph.BFS(actor1);
-        // while actor has prev node go to prev, then compre if actor1 = actor2
-        while(actor2->prev)
-          actor2 = actor2->prev;
-        if(actor2 == actor1 && movie_year[j] == 0){
-          movie_year[j] = i;
-          //set temp[j] to null so next time search wont replace year again
-          //temp[j] = make_pair(NULL, NULL);
-        }
+    for(int i = graph.curr_movie_year; i < 2016; i++){
+      //adding nodes to graphs via ActorGraph object
+      graph.buildGraph(argv[1], i);
+      for(int j = 0; j < size; j++){
+	//chech if both actors are in the graph or not
+	if(graph.actors.find(temp[j].first) != graph.actors.end() && graph.actors.find(temp[j].second) != graph.actors.end() ){
+	  // set both actor to respectively nodes
+	  actor1 = graph.actors.at(temp[j].first);
+	  actor2 = graph.actors.at(temp[j].second);
+	  //clear graph then BFS
+	  graph.clear();
+	  graph.BFS(actor1);
+	  // while actor has prev node go to prev, then compre if actor1 = actor2
+	  while(actor2->prev)
+	    actor2 = actor2->prev;
+	  if(actor2 == actor1 && movie_year[j] == 0){
+	    movie_year[j] = i;
+	    //set temp[j] to null so next time search wont replace year again
+	    //temp[j] = make_pair(NULL, NULL);
+	  }
+	}
       }
+      //set to beginning of the files
+      infile1.clear();
+      infile1.seekg(0, ios::beg);
     }
-    //set to beginning of the files
-    infile1.clear();
-    infile1.seekg(0, ios::beg);
   }
-}
-else{
-  for(int i = 1990; i < 2016; i++){
-    //adding nodes to graphs via ActorGraph object
-    graph.buildUnionFind(argv[1], i);
-    for(int j = 0; j < size; j++){
-      //chech if both actors are in the graph or not
-      if(graph.uf.find(temp[j].first) == graph.uf.find(temp[j].second)){
-            if(movie_year[j] == 0)
-              movie_year[j] = i;
-          //set temp[j] to null so next time search wont replace year again
+  else{
+    for(int i = graph.curr_movie_year; i < 2016; i++){
+      //adding nodes to graphs via ActorGraph object
+      graph.buildUnionFind(argv[1], i);
+      for(int j = 0; j < size; j++){
+	//chech if both actors are in the graph or not
+	if(graph.uf.find(temp[j].first) == graph.uf.find(temp[j].second)){
+	  if(movie_year[j] == 0)
+	    movie_year[j] = i;
           cout << temp[j].first << "\t" << temp[j].second << "\t" << i <<
-          "\t" << "found" << endl;
+	    "\t" << "found" << endl;
         }
       }
       //set to beginning of the files
       infile1.clear();
       infile1.seekg(0, ios::beg);
-
+    }
   }
-
-}
-
-
 
   //write the header and additional informations
   outfile << "Actor1\tActor2\tYear" << endl;
   for(int i = 0; i < actorsPair.size(); i++){
     outfile << actorsPair[i].first << "\t" << actorsPair[i].second << "\t" << movie_year[i] << endl;
   }
+
   //close all files and end
   infile1.close();
   infile2.close();
   outfile.close();
-  return 0;
-
+  return 0;  
 }
