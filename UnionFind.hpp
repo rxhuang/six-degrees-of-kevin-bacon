@@ -17,21 +17,19 @@ class UnionFind{
 
 
   string find(string name){
-    if(actorSet[name].first !=name){
+    if(actorSet[name].first !=name)
       actorSet[name].first = find(actorSet[name].first);
-    }
-    else{
-      return actorSet[name].first;
-    }
+
+    return actorSet[name].first;
+
   }
 
   void unionJoin(string name1, string name2){
-    string n1 = find(n1);
-    string n2 = find(n2);
+    string n1 = find(name1);
+    string n2 = find(name2);
 
-    if(n1==n2){
+    if(n1==n2)
       return;
-    }
     else if(actorSet[n1].second >= actorSet[n2].second){
       actorSet[n2].first = n1;
       actorSet[n1].second = actorSet[n1].second + actorSet[n2].second;

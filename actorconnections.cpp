@@ -86,7 +86,7 @@ int main(int argc, char*argv[]) {
   ofstream outfile;
   if(argc == 4)
     name = "uf";
-  else if(strcmp(argv[5], "bfs"))
+  else if(strcmp(argv[4], "bfs"))
     name = "uf";
   else
     name = "bfs";
@@ -127,10 +127,10 @@ int main(int argc, char*argv[]) {
         // while actor has prev node go to prev, then compre if actor1 = actor2
         while(actor2->prev)
           actor2 = actor2->prev;
-        if(actor2 == actor1){
+        if(actor2 == actor1 && movie_year[j] == 0){
           movie_year[j] = i;
           //set temp[j] to null so next time search wont replace year again
-          temp[j] = make_pair(NULL, NULL);
+          //temp[j] = make_pair(NULL, NULL);
         }
       }
     }
@@ -140,15 +140,17 @@ int main(int argc, char*argv[]) {
   }
 }
 else{
-  for(int i = graph.curr_movie_year; i < 2016; i++){
+  for(int i = 1990; i < 2016; i++){
     //adding nodes to graphs via ActorGraph object
     graph.buildUnionFind(argv[1], i);
     for(int j = 0; j < size; j++){
       //chech if both actors are in the graph or not
       if(graph.uf.find(temp[j].first) == graph.uf.find(temp[j].second)){
-          movie_year[j] = i;
+            if(movie_year[j] == 0)
+              movie_year[j] = i;
           //set temp[j] to null so next time search wont replace year again
-          temp[j] = make_pair(NULL, NULL);
+          cout << temp[j].first << "\t" << temp[j].second << "\t" << i <<
+          "\t" << "found" << endl;
         }
       }
       //set to beginning of the files
