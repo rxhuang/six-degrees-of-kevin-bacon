@@ -1,3 +1,10 @@
+/*
+ * Actorconnections.cpp
+ * Author: Ruoxin Huang, Muyang Wu
+ * Date:  3/2/2017
+ *
+ * Actorconnections.cpp is meant to give the year that after such will two Actors connected.
+ */
 #include "ActorNode.h"
 #include "ActorGraph.h"
 #include "Movies.h"
@@ -10,38 +17,17 @@
 #define MAX 2147483647
 #include <string.h>
 
-/*param: two actor names
-  return: shortest path
-*/
-void BFS(ActorNode* actor1) {
-  ActorNode* curr;
-  ActorNode* currA;
-  Movies* currM;
-  queue<ActorNode*> queue;
-  queue.push(actor1); //push origin actor into queue
-  actor1->distance=0; //set distance to 0
-  while(!queue.empty()){
-    curr = queue.front();
-    queue.pop(); //pop element
-    //for all movies the actor took part
-    for(int i=0; i<curr->movies.size(); i++){
-      currM = curr->movies[i];// set pointer to one of his movies
-      //for all actors in the movie
-      for(int j=0; j<currM->starring.size(); j++){
-	currA = currM->starring[j]; //set pointer to one of its actor
-	if(currA->distance==MAX){ //if actor is not already searched
-	  currA->distance = curr->distance+1; //set distance to previous distance +1
-	  currA->prev = curr;// set prev
-	  currA->movie = currM->name;
-	  currA->year = currM->year;
-	  queue.push(currA);//push it to queue
-	}
-      }
-    }
-  }
-}
+/*
+ * Load the graph from a tab-delimited file of actor->movie relationships. Then
+ * load them into a vector of pairs
+ *
+ * in_filename - input filename
+ * input - a vector of pairs that saves all actor pairs.
+ *
+ * no return
+ */
 void loadpair(const char* in_filename, vector<pair<string, string>> &input){
-  // pretty much copy the whole thing from loadFromFile functions
+  // pretty much copy the whole thing from loadFromFile functions from ActorGraph.cpp
   // Initialize the file stream
   ifstream infile(in_filename);
 
@@ -81,7 +67,12 @@ void loadpair(const char* in_filename, vector<pair<string, string>> &input){
       string actor2(record[1]);
       input.insert(input.end(), make_pair(actor1, actor2));
     }
+    if (!infile.eof()) {
+        cerr << "Failed to read " << in_filename << "!\n";
+    }
+    infile.close();
 }
+//main func
 int main(int argc, char*argv[]) {
   if(argc != 4){
     cout << "invalid # of arguments" << endl;
@@ -124,7 +115,7 @@ int main(int argc, char*argv[]) {
         actor2 = graph.actors.at(temp[j].second);
         //clear graph then BFS
         graph.clear();
-        BFS(actor1);
+        graph.BFS(actor1);
         // while actor has prev node go to prev, then compre if actor1 = actor2
         while(actor2->prev)
           actor2 = actor2->prev;

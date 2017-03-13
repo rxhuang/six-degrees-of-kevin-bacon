@@ -3,8 +3,7 @@
  * Author: Ruoxin Huang, Muyang Wu
  * Date:  3/2/2017
  *
- * This file is meant to exist as a container for starter code that you can use to read the input file format
- * defined in movie_casts.tsv. Feel free to modify any/all aspects as you wish.
+ * This is the implementation file of ActorGraph class.
  */
 
 #include <fstream>
@@ -12,14 +11,29 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <queue>
 #include "ActorGraph.h"
 #define MAX 2147483647
 using namespace std;
-
+/*
+ *  Constructor of ActorGraph object
+ *
+ *  no parameter
+ *
+ *  no return.
+ */
 ActorGraph::ActorGraph(void) {
   curr_movie_year = 2015;
 }
-
+/*
+ * Load the graph from a tab-delimited file of actor->movie relationships. Then
+ * load them into two unordered_map variables.
+ *
+ * in_filename - input filename
+ * use_weighted_edges - if true, compute edge weights as 1 + (2015 - movie_year), otherwise all edge weights will be 1
+ *
+ * return true if file was loaded sucessfully, false otherwise
+ */
 bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) {
     // Initialize the file stream
     ifstream infile(in_filename);
@@ -109,7 +123,13 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 
     return true;
 }
-
+/*
+ * Load the graph from a tab-delimited file of actor->movie relationships. And * try to find the oldest movie year.
+ *
+ * in_filename - input filename
+ *
+ * return true if file was loaded sucessfully, false otherwise
+ */
 bool ActorGraph::loadFromFile(const char* in_filename) {
     // Initialize the file stream
     ifstream infile(in_filename);
@@ -160,7 +180,14 @@ bool ActorGraph::loadFromFile(const char* in_filename) {
 
     return true;
 }
-
+/*
+ * Build the graph according to year parameter, only the same year will be
+ * added to map.
+ *
+ * in_filename - input filename
+ * year - at which year this function should load into
+ * no return
+ */
 void ActorGraph::buildGraph(const char* in_filename, int year){
   // Initialize the file stream
   ifstream infile(in_filename);
@@ -249,8 +276,86 @@ void ActorGraph::buildGraph(const char* in_filename, int year){
   infile.close();
 
 }
-
-
+/*
+ * Do breath-first search to find the shortst path
+ *
+ * actor1 - ActorNode of first actor
+ *
+ * no return
+ */
+void ActorGraph::BFS(ActorNode* actor1) {
+  ActorNode* curr;
+  ActorNode* currA;
+  Movies* currM;
+  queue<ActorNode*> queue;
+  queue.push(actor1); //push origin actor into queue
+  actor1->distance=0; //set distance to 0
+  while(!queue.empty()){
+    curr = queue.front();
+    queue.pop(); //pop element
+    //for all movies the actor took part
+    for(int i=0; i<curr->movies.size(); i++){
+      currM = curr->movies[i];// set pointer to one of his movies
+      //for all actors in the movie
+      for(int j=0; j<currM->starring.size(); j++){
+	currA = currM->starring[j]; //set pointer to one of its actor
+	if(currA->distance==MAX){ //if actor is not already searched
+	  currA->distance = curr->distance+1; //set distance to previous distance +1
+	  currA->prev = curr;// set prev
+	  currA->movie = currM->name;
+	  currA->year = currM->year;
+	  queue.push(currA);//push it to queue
+	}
+      }
+    }
+  }
+}
+/*
+ * Do dijkstra's algorithm to find the shortst path
+ *
+ * actor1 - ActorNode of first actor
+ *
+ * no return
+ */
+void ActorGraph::Dijk(ActorNode* actor1) {
+  ActorNode* curr;
+  ActorNode* currA;
+  Movies* currM;
+  priority_queue<ActorNode*, vector<ActorNode*>,ActorNodePtrComp> queue;
+  int distance;
+  queue.push(actor1); //push origin actor into queue
+  actor1->distance=0; //set distance to 0
+  while(!queue.empty()){
+    curr = queue.top();
+    queue.pop(); //pop element
+    if( (curr->done) == false)
+      curr->done=true;
+    //for all movies the actor took part
+    for(int i=0; i<curr->movies.size(); i++){
+      currM = curr->movies[i];// set pointer to one of his movies
+      //for all actors in the movie
+      for(int j=0; j<currM->starring.size(); j++){
+	currA = currM->starring[j]; //set pointer to one of its actor
+	distance = curr->distance+1+(2015-currM->year);
+	if(distance<currA->distance){ //if actor is not already searched
+	  currA->distance = distance; //set distance to previous distance +1
+	  currA->prev = curr;// set prev
+	  currA->movie = currM->name;
+	  currA->year = currM->year;
+	  queue.push(currA);//push it to queue
+	}
+      }
+    }
+  }
+}
+/*
+ * Clear the graph, distance is set to MAX (which is roughly infinity), prev
+ * ActorNode to null and done is false
+ *
+ * no parameter
+ *
+ * no return
+ */
 void ActorGraph::clear(){
   for(auto it = actors.begin(); it != actors.end(); ++it){
     it->second->distance = MAX;

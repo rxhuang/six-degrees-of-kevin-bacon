@@ -1,3 +1,10 @@
+/*
+ * ActorNode.h
+ * Author: Ruoxin Huang, Muyang Wu
+ * Date:  3/2/2017
+ *
+ * ActorNode.h is header file of ActorNode class.
+ */
 #ifndef ACTORNODE_H
 #define ACTORNODE_H
 #include "Movies.h"
@@ -32,4 +39,4 @@ class ActorNodePtrComp {
     return *lhs < *rhs;
   }
 };
-#endif
+#endif // ACTORNODE_H

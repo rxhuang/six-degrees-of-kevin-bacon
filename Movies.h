@@ -1,3 +1,10 @@
+/*
+ * Movies.h
+ * Author: Ruoxin Huang, Muyang Wu
+ * Date:  3/2/2017
+ *
+ * Movies.h is header file of Movies class.
+ */
 #ifndef MOVIES_H
 #define MOVIES_H
 #include "ActorNode.h"
@@ -16,4 +23,4 @@ class Movies{
   void addActor(ActorNode* a);
 };
 
-#endif
+#endif // MOVIES_H
