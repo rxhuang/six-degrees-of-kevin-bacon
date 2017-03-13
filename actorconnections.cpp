@@ -150,8 +150,6 @@ int main(int argc, char*argv[]) {
 	if(graph.uf.find(temp[j].first) == graph.uf.find(temp[j].second)){
 	  if(movie_year[j] == 0)
 	    movie_year[j] = i;
-          cout << temp[j].first << "\t" << temp[j].second << "\t" << i <<
-	    "\t" << "found" << endl;
         }
       }
       //set to beginning of the files

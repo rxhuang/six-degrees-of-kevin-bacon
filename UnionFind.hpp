@@ -17,6 +17,8 @@ class UnionFind{
 
 
   string find(string name){
+    if(actorSet.find(name) == actorSet.end())
+      actorSet.emplace(name, make_pair(name, 1));
     if(actorSet[name].first !=name)
       actorSet[name].first = find(actorSet[name].first);
 

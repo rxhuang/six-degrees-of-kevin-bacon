@@ -231,53 +231,54 @@ void ActorGraph::buildGraph(const char* in_filename, int year){
       int movie_year = stoi(record[2]);
       // insert actors and movies into respective map
       if(movie_year == year){
-      if(actors.find(actor_name) == actors.end() && movies.find(movie_title) == movies.end()){
-        // no actor or movie exists, add new actor and movie
-        ActorNode* a = new ActorNode(actor_name);
-        Movies* m = new Movies(movie_title,movie_year);
-        a->addMovie(m);
-        actors.emplace(actor_name, a);
-        m->addActor(a);
-        movies.emplace(movie_title, m);
-      }
-      else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) != movies.end()){
-
-        //both actor and movie exists, add respective pointers to them
-        (actors.find(actor_name))->second->addMovie((movies.find(movie_title))->second);
-        (movies.find(movie_title))->second->addActor((actors.find(actor_name))->second);
-
-      }
-      else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) == movies.end()){
-        //actors exists, create new movie and add actor's pointer
-        Movies * m = new Movies(movie_title,movie_year);
-
-        m->addActor((actors.find(actor_name))->second);
-
-        movies.emplace(movie_title, m);
-
-        //add new movie pointer to actor
-        (actors.find(actor_name))->second->addMovie(m);
-
-
-      }
-      else if(actors.find(actor_name) == actors.end() && movies.find(movie_title) != movies.end()){
+	if(actors.find(actor_name) == actors.end() && movies.find(movie_title) == movies.end()){
+	  // no actor or movie exists, add new actor and movie
+	  ActorNode* a = new ActorNode(actor_name);
+	  Movies* m = new Movies(movie_title,movie_year);
+	  a->addMovie(m);
+	  actors.emplace(actor_name, a);
+	  m->addActor(a);
+	  movies.emplace(movie_title, m);
+	}
+	else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) != movies.end()){
+	  
+	  //both actor and movie exists, add respective pointers to them
+	  (actors.find(actor_name))->second->addMovie((movies.find(movie_title))->second);
+	  (movies.find(movie_title))->second->addActor((actors.find(actor_name))->second);
+	  
+	}
+	else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) == movies.end()){
+	  //actors exists, create new movie and add actor's pointer
+	  Movies * m = new Movies(movie_title,movie_year);
+	  
+	  m->addActor((actors.find(actor_name))->second);
+	  
+	  movies.emplace(movie_title, m);
+	  
+	  //add new movie pointer to actor
+	  (actors.find(actor_name))->second->addMovie(m);
+	  
+	  
+	}
+	else if(actors.find(actor_name) == actors.end() && movies.find(movie_title) != movies.end()){
         // actor does not exist, create new actor and add respective movie pointer to it
-
-        ActorNode * a = new ActorNode(actor_name);
-        a->addMovie((movies.find(movie_title))->second);
-        actors.emplace(actor_name, a);
-        // add new actor pointer to movies
-        (movies.find(movie_title))->second->addActor(a);
-      }
+	  
+	  ActorNode * a = new ActorNode(actor_name);
+	  a->addMovie((movies.find(movie_title))->second);
+	  actors.emplace(actor_name, a);
+	  // add new actor pointer to movies
+	  (movies.find(movie_title))->second->addActor(a);
+	}
     }
   }
-
+  
   if (!infile.eof()) {
-      cerr << "Failed to read " << in_filename << "!\n";
+    cerr << "Failed to read " << in_filename << "!\n";
   }
   infile.close();
-
+  
 }
+
 void ActorGraph::buildUnionFind(const char* in_filename, int year){
   // Initialize the file stream
   ifstream infile(in_filename);
@@ -324,7 +325,7 @@ void ActorGraph::buildUnionFind(const char* in_filename, int year){
         uf.actorSet.emplace(actor_name, make_pair(actor_name, 1));
         auto range = ufHash.equal_range(movie_title);
         for(auto it = range.first; it != range.second; ++it ){
-          uf.unionJoin(it->first, actor_name);
+	  uf.unionJoin(it->second, actor_name);
         }
     }
   }
