@@ -15,6 +15,8 @@ class UnionFind{
 
   unordered_map<string, pair<string, int>> actorSet;
   unordered_multimap<string, string> ufHash;
+  vector<string> movies;
+  vector<string> actors;
 
   UnionFind(){}
   ~UnionFind(){}
@@ -88,13 +90,11 @@ class UnionFind{
         // insert actors and movies into respective map
         if(movie_year == year){
           ufHash.emplace(movie_title, actor_name);
+          movies.push_back(movie_title);
+          actors.push_back(actor_name);
         if(actorSet.find(actor_name) == actorSet.end())
           actorSet.emplace(actor_name, make_pair(actor_name, 1));
-          auto range = ufHash.equal_range(movie_title);
-          for(auto it = range.first; it != range.second; ++it ){
-            if(it->second != actor_name)
-  	         unionJoin(it->second, actor_name);
-          }
+
       }
     }
 
@@ -103,6 +103,22 @@ class UnionFind{
     }
     infile.close();
 
+  }
+  void unionFindAndClear(){
+    for(int i = 0; i < movies.size(); i++){
+    auto range = ufHash.equal_range(movies[i]);
+    auto temp = range.first;
+    string actor_name = temp->second;
+    for(auto it = range.first; it != range.second; ++it ){
+      if(it->second != actor_name)
+       unionJoin(it->second, actor_name);
+    }
+  }
+  for(auto it = movies.begin(); it != movies.end(); ++it)
+    movies.erase(it);
+
+    for(auto it = ufHash.begin(); it != ufHash.end(); ++it)
+      ufHash.erase(it);
   }
 
 

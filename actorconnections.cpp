@@ -83,9 +83,6 @@ int main(int argc, char*argv[]) {
     return -1;
   }
   //Initialize graph and output stream
-  clock_t start;
-  double duration;
-  start = clock();
   string name;
   vector<pair<string, string>> actorsPair;
   vector<pair<string, string>> temp;
@@ -120,6 +117,9 @@ int main(int argc, char*argv[]) {
   infile1.clear();
   infile1.seekg(0, ios::beg);
   //for each movie, from the oldest year to 2015 buildgraph and then do BFS to find whether two actors are connected or not
+  clock_t start;
+  double duration;
+  start = clock();
   if(name == "bfs"){
     for(int i = graph.curr_movie_year; i < 2016; i++){
       //adding nodes to graphs via ActorGraph object
@@ -147,11 +147,14 @@ int main(int argc, char*argv[]) {
       infile1.clear();
       infile1.seekg(0, ios::beg);
     }
+    duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    cout<<"The " << name << " takes "<< duration << " seconds" <<'\n';
   }
   else{
     for(int i = graph.curr_movie_year; i < 2016; i++){
       //adding nodes to graphs via ActorGraph object
       uf.buildUnionFind(argv[1], i);
+      uf.unionFindAndClear();
       for(int j = 0; j < size; j++){
 	//chech if both actors are in the graph or not
 	if(uf.find(temp[j].first) == uf.find(temp[j].second)){
@@ -163,6 +166,8 @@ int main(int argc, char*argv[]) {
       infile1.clear();
       infile1.seekg(0, ios::beg);
     }
+    duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
+    cout<<"The " << name << " takes "<< duration << " seconds" <<'\n';
   }
 
   //write the header and additional informations
@@ -175,7 +180,6 @@ int main(int argc, char*argv[]) {
   infile1.close();
   infile2.close();
   outfile.close();
-  duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
-  cout<<"The " << name << " takes "<< duration << " seconds" <<'\n';
+
   return 0;
 }
