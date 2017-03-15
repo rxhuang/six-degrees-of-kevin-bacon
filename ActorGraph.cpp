@@ -278,7 +278,14 @@ void ActorGraph::buildGraphByYear(const char* in_filename, int year){
   infile.close();
 
 }
-
+/*
+ * Build the graph according to year parameter, only the same year will be
+ * added to map.
+ *
+ * in_filename - input filename
+ *
+ * no return
+ */
 void ActorGraph::buildExtensionGraph(const char* in_filename){
   // Initialize the file stream
   ifstream infile(in_filename);

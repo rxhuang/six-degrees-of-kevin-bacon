@@ -18,7 +18,13 @@ class UnionFind{
   UnionFind(){}
   ~UnionFind(){}
 
-
+  /*
+   * find the actors if not add them in, and then return itself
+   *
+   * string - name of the actors that needs to be found
+   *
+   * return a string if found otherwise itself
+   */
   string find(string name){
     if(actorSet.find(name) == actorSet.end())
       actorSet.emplace(name, make_pair(name, 1));
@@ -28,7 +34,14 @@ class UnionFind{
     return actorSet[name].first;
 
   }
-
+  /*
+   * join to actor together
+   *
+   * string - name of the first actors to be joined
+   * string - name of the second actors to be joined
+   *
+   * return nothing
+   */
   void unionJoin(string name1, string name2){
     string n1 = find(name1);
     string n2 = find(name2);
@@ -44,7 +57,14 @@ class UnionFind{
       actorSet[n2].second = actorSet[n1].second + actorSet[n2].second;
     }
   }
-
+  /*
+   * build the disjoint set
+   *
+   * in_filename - the file that needs to be parsed
+   * year - at which year movies and actors that needs to be joined
+   *
+   * return nothing 
+   */
   void buildUnionFind(const char* in_filename, int year){
     // Initialize the file stream
     ifstream infile(in_filename);
