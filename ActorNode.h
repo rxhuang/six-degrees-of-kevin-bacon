@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_set>
 using namespace std;
 
 class Movies;
@@ -23,7 +24,7 @@ class ActorNode{
   int year;
   ActorNode* prev;
   vector<Movies*> movies;
-  vector<string> people;
+  unordered_set<string> people;
   ActorNode(string n);
   void addMovie(Movies* m);
   /** Less-than comparison, so HCNodes will work in std::priority_queue

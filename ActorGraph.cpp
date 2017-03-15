@@ -311,7 +311,7 @@ void ActorGraph::buildExtensionGraph(const char* in_filename){
           string next;
 
           // get the next string before hitting a tab character and put it in 'next'
-          if (!getline( ss, next, '\t' )) break;
+          if (!getline( ss, next, ' ' )) break;
 
           record.push_back( next );
       }
@@ -324,15 +324,14 @@ void ActorGraph::buildExtensionGraph(const char* in_filename){
       string person1(record[0]);
       string person2(record[1]);
       if(actors.find(person1) == actors.end()){
-    	  // no actor or movie exists, add new actor and movie
     	  ActorNode* a = new ActorNode(person1);
-    	  a.people.push_back(person2);
+    	  a->people.emplace(person2);
     	  actors.emplace(person1, a);
     	}
-    	else if(actors.find(actor_name) != actors.end()){
+    	else if(actors.find(person1) != actors.end()){
 
     	  //both actor and movie exists, add respective pointers to them
-    	  (actors.find(person1))->second.people.push_back(person2);
+    	  actors[person1]->people.emplace(person2);
 
     	}
 
@@ -340,7 +339,6 @@ void ActorGraph::buildExtensionGraph(const char* in_filename){
     }
   if (!infile.eof()) {
       cerr << "Failed to read " << in_filename << "!\n";
-      return false;
   }
   infile.close();
 
