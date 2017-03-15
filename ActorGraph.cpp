@@ -132,7 +132,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
  *
  * return true if file was loaded sucessfully, false otherwise
  */
-bool ActorGraph::loadFromFile(const char* in_filename) {
+bool ActorGraph::getOldestYear(const char* in_filename) {
     // Initialize the file stream
     ifstream infile(in_filename);
 
@@ -190,7 +190,7 @@ bool ActorGraph::loadFromFile(const char* in_filename) {
  * year - at which year this function should load into
  * no return
  */
-void ActorGraph::buildGraph(const char* in_filename, int year){
+void ActorGraph::buildGraphByYear(const char* in_filename, int year){
   // Initialize the file stream
   ifstream infile(in_filename);
 
@@ -241,28 +241,28 @@ void ActorGraph::buildGraph(const char* in_filename, int year){
 	  movies.emplace(movie_title, m);
 	}
 	else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) != movies.end()){
-	  
+
 	  //both actor and movie exists, add respective pointers to them
 	  (actors.find(actor_name))->second->addMovie((movies.find(movie_title))->second);
 	  (movies.find(movie_title))->second->addActor((actors.find(actor_name))->second);
-	  
+
 	}
 	else if(actors.find(actor_name) != actors.end() && movies.find(movie_title) == movies.end()){
 	  //actors exists, create new movie and add actor's pointer
 	  Movies * m = new Movies(movie_title,movie_year);
-	  
+
 	  m->addActor((actors.find(actor_name))->second);
-	  
+
 	  movies.emplace(movie_title, m);
-	  
+
 	  //add new movie pointer to actor
 	  (actors.find(actor_name))->second->addMovie(m);
-	  
-	  
+
+
 	}
 	else if(actors.find(actor_name) == actors.end() && movies.find(movie_title) != movies.end()){
         // actor does not exist, create new actor and add respective movie pointer to it
-	  
+
 	  ActorNode * a = new ActorNode(actor_name);
 	  a->addMovie((movies.find(movie_title))->second);
 	  actors.emplace(actor_name, a);
@@ -271,20 +271,26 @@ void ActorGraph::buildGraph(const char* in_filename, int year){
 	}
     }
   }
-  
+
   if (!infile.eof()) {
     cerr << "Failed to read " << in_filename << "!\n";
   }
   infile.close();
-  
-}
 
-void ActorGraph::buildUnionFind(const char* in_filename, int year){
+}
+/*
+ * Build the graph according to year parameter, only the same year will be
+ * added to map.
+ *
+ * in_filename - input filename
+ *
+ * no return
+ */
+void ActorGraph::buildExtensionGraph(const char* in_filename){
   // Initialize the file stream
   ifstream infile(in_filename);
 
   bool have_header = false;
-
   // keep reading lines until the end of file is reached
   while (infile) {
       string s;
@@ -310,28 +316,31 @@ void ActorGraph::buildUnionFind(const char* in_filename, int year){
           record.push_back( next );
       }
 
-      if (record.size() != 3) {
-          // we should have exactly 3 columns
+      if (record.size() != 2) {
+          // we should have exactly 2 columns
           continue;
       }
 
-      string actor_name(record[0]);
-      string movie_title(record[1]);
-      int movie_year = stoi(record[2]);
-      // insert actors and movies into respective map
-      if(movie_year == year){
-        ufHash.emplace(movie_title, actor_name);
-      if(uf.actorSet.find(actor_name) == uf.actorSet.end())
-        uf.actorSet.emplace(actor_name, make_pair(actor_name, 1));
-        auto range = ufHash.equal_range(movie_title);
-        for(auto it = range.first; it != range.second; ++it ){
-	  uf.unionJoin(it->second, actor_name);
-        }
-    }
-  }
+      string person1(record[0]);
+      string person2(record[1]);
+      if(actors.find(person1) == actors.end()){
+    	  // no actor or movie exists, add new actor and movie
+    	  ActorNode* a = new ActorNode(person1);
+    	  a.people.push_back(person2);
+    	  actors.emplace(person1, a);
+    	}
+    	else if(actors.find(actor_name) != actors.end()){
 
+    	  //both actor and movie exists, add respective pointers to them
+    	  (actors.find(person1))->second.people.push_back(person2);
+
+    	}
+
+
+    }
   if (!infile.eof()) {
       cerr << "Failed to read " << in_filename << "!\n";
+      return false;
   }
   infile.close();
 

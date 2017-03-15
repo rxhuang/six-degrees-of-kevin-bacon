@@ -23,7 +23,7 @@ class ActorNode{
   int year;
   ActorNode* prev;
   vector<Movies*> movies;
-
+  vector<string> people;
   ActorNode(string n);
   void addMovie(Movies* m);
   /** Less-than comparison, so HCNodes will work in std::priority_queue
