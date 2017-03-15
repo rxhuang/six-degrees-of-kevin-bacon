@@ -154,7 +154,6 @@ int main(int argc, char*argv[]) {
     for(int i = graph.curr_movie_year; i < 2016; i++){
       //adding nodes to graphs via ActorGraph object
       uf.buildUnionFind(argv[1], i);
-      uf.unionFindAndClear();
       for(int j = 0; j < size; j++){
 	//chech if both actors are in the graph or not
 	if(uf.find(temp[j].first) == uf.find(temp[j].second)){
