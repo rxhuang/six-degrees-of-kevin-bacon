@@ -279,6 +279,65 @@ void ActorGraph::buildGraphByYear(const char* in_filename, int year){
 
 }
 
+void ActorGraph::buildExtensionGraph(const char* in_filename){
+  // Initialize the file stream
+  ifstream infile(in_filename);
+
+  bool have_header = false;
+  // keep reading lines until the end of file is reached
+  while (infile) {
+      string s;
+
+      // get the next line
+      if (!getline( infile, s )) break;
+
+      if (!have_header) {
+          // skip the header
+          have_header = true;
+          continue;
+      }
+
+      istringstream ss( s );
+      vector <string> record;
+
+      while (ss) {
+          string next;
+
+          // get the next string before hitting a tab character and put it in 'next'
+          if (!getline( ss, next, '\t' )) break;
+
+          record.push_back( next );
+      }
+
+      if (record.size() != 2) {
+          // we should have exactly 2 columns
+          continue;
+      }
+
+      string person1(record[0]);
+      string person2(record[1]);
+      if(actors.find(person1) == actors.end()){
+    	  // no actor or movie exists, add new actor and movie
+    	  ActorNode* a = new ActorNode(person1);
+    	  a.people.push_back(person2);
+    	  actors.emplace(person1, a);
+    	}
+    	else if(actors.find(actor_name) != actors.end()){
+
+    	  //both actor and movie exists, add respective pointers to them
+    	  (actors.find(person1))->second.people.push_back(person2);
+
+    	}
+
+
+    }
+  if (!infile.eof()) {
+      cerr << "Failed to read " << in_filename << "!\n";
+      return false;
+  }
+  infile.close();
+
+}
 
 /*
  * Do breath-first search to find the shortst path

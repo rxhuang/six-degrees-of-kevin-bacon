@@ -37,6 +37,7 @@ public:
      bool loadFromFile(const char* in_filename, bool use_weighted_edges);
      bool getOldestYear(const char* in_filename);
      void buildGraphByYear(const char* in_filename, int year);
+     void buildExtensionGraph(const char* in_filename);
      void clear();
      void BFS(ActorNode*);
      void Dijk(ActorNode*);
