@@ -26,7 +26,7 @@ class ActorGraph {
 public:
     ActorGraph(void);
 
-
+    ~ActorGraph();
     /*
      * Load the graph from a tab-delimited file of actor->movie relationships.
      *

@@ -27,6 +27,19 @@ using namespace std;
 ActorGraph::ActorGraph(void) {
   curr_movie_year = 2015;
 }
+
+//destructor of actor graph
+ActorGraph::~ActorGraph()
+{
+  for(unordered_map<string,ActorNode*>::iterator it = actors.begin()
+	; it != actors.end(); ++it)
+    delete (it->second);
+
+  for(unordered_map<string,Movies*>::iterator it = movies.begin()
+	; it != movies.end(); ++it)
+    delete (it->second);
+}
+
 /*
  * Load the graph from a tab-delimited file of actor->movie relationships. Then
  * load them into two unordered_map variables.

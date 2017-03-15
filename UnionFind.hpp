@@ -26,11 +26,13 @@ class UnionFind{
    * return a string if found otherwise itself
    */
   string find(string name){
+    // if not in uf, add it
     if(actorSet.find(name) == actorSet.end())
       actorSet.emplace(name, make_pair(name, 1));
+    // if not sentinal node, do path compression
     if(actorSet[name].first !=name)
       actorSet[name].first = find(actorSet[name].first);
-
+    //return the sentinal node
     return actorSet[name].first;
 
   }
@@ -45,13 +47,15 @@ class UnionFind{
   void unionJoin(string name1, string name2){
     string n1 = find(name1);
     string n2 = find(name2);
-
+    // if in same up tree, just return
     if(n1==n2)
       return;
+    // if not, do union by size
     else if(actorSet[n1].second >= actorSet[n2].second){
       actorSet[n2].first = n1;
       actorSet[n1].second = actorSet[n1].second + actorSet[n2].second;
     }
+   
     else{
       actorSet[n1].first = n2;
       actorSet[n2].second = actorSet[n1].second + actorSet[n2].second;
